@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <title>Daily Hour</title>
+    <style>
+        body { background-color: white; font-family: Arial, sans-serif; text-align: center; margin-top: 30px; color: #333; }
+        h1 { font-family: 'Dancing Script', cursive; color: #F21A72; font-size: 3.5rem; margin-bottom: 10px; }
+        .subtitulo { font-size: 1.1rem; color: #666; margin-bottom: 30px; }
+        .campo-email { padding: 10px 15px; font-size: 1rem; border: 2px solid #F21A72; border-radius: 8px; width: 300px; outline: none; text-align: center; margin-bottom: 20px; }
+        .quadro-tarefas { border: 2px solid #333; border-radius: 12px; max-width: 600px; margin: 0 auto; padding: 30px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); }
+        .linha-entrada { display: flex; gap: 10px; margin-bottom: 30px; }
+        .campo-tarefa { flex: 2; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; outline: none; }
+        .campo-hora { flex: 1; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; outline: none; cursor: pointer; }
+        .lista-tarefas { text-align: left; margin-top: 20px; }
+        .item-tarefa { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
+        .hora-tarefa { 
+            background-color: #FEE8EF; /* Um rosa clarinho de fundo */
+            color: #F21A72; /* O rosa vibrante no texto */
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            margin-left: 10px; 
+        }
+        .botao-excluir { background: none; border: none; color: #cc0000; font-size: 1.2rem; font-weight: bold; cursor: pointer; padding: 0 5px; }
+        .botao-excluir:hover { color: #ff0000; }
+        
+        /* Estilo da caixinha de aviso de sucesso */
+        .alerta-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bloco que mostra a caixinha se o Python mandar o aviso -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alerta-sucesso">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/adicionar">
+        <h1>Daily Hour</h1>
+        <p class="subtitulo">Crie suas tarefas e receba notificações no seu e-mail</p>
+
+        <div>
+            <input type="email" class="campo-email" name="email_usuario" placeholder="Adicione seu e-mail" required>
+        </div>
+
+        <div class="quadro-tarefas">
+            <div class="linha-entrada">
+                <input type="text" class="campo-tarefa" name="nome_tarefa" placeholder="Adicione suas tarefas aqui. ex: Levar cachorro para passear" required>
+                <input type="time" class="campo-hora" name="hora_tarefa" required>
+                <button type="submit" style="background-color: #F21A72; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">Adicionar</button>
+            </div>
+
+            <div class="lista-tarefas">
+                {% for tarefa in lista_de_tarefas %}
+                <div class="item-tarefa">
+                    <div>
+                        <span>{{ tarefa.nome }}</span>
+                        <span class="hora-tarefa">{{ tarefa.hora }}</span>
+                    </div>
+                    <a href="/deletar/{{ loop.index0 }}" style="text-decoration: none;" class="botao-excluir" title="Excluir Tarefa">&times;</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+</body>
+</html>
